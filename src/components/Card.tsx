@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useState } from "react";
 
 interface CardProps {
     children: ReactNode,
@@ -33,6 +34,24 @@ export function CardBody(props: CardBodyProps) {
         <>
             <h5 className="card-title">{title}</h5>
             <p className="card-text">{text}</p>
+        </>
+    )
+
+}
+
+export function Button() {
+
+    const [buttonClicked, setButtonClicked] = useState(false);
+
+    const handleClick = () => {
+        setButtonClicked(true)
+    }
+
+    const button = buttonClicked ? <button type="button" className="btn btn-secondary" disabled>Cargando...</button> : <button type="button" className="btn btn-primary" onClick={handleClick}>Hola mundo</button>
+
+    return (
+        <>
+            {button}
         </>
     )
 
