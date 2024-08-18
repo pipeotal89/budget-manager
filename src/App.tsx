@@ -1,8 +1,5 @@
 import BudgetCard from "./components/BudgetCard/BudgetCard";
-import Button from "./components/Button/Button";
 import BudgetStatus from "./components/BudgetStatus/BudgetStatus";
-import List from "./components/List/List";
-import { useState } from "react";
 import "./App.css";
 
 /*
@@ -14,6 +11,7 @@ import "./App.css";
 */
 
 function App() {
+  /*
   const [list, setList] = useState(["Goku", "Naruto", "Eren"]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +26,7 @@ function App() {
   ) : (
     "Sin elementos para mostrar"
   );
+  */
 
   return (
     <div className="main">
