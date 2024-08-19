@@ -1,0 +1,10 @@
+#status-header-text {
+    font-weight: bold;
+}
+
+#status-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}

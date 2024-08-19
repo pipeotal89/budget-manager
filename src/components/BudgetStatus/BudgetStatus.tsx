@@ -1,18 +1,59 @@
-import { Accordion } from "react-bootstrap";
+import { Accordion, Table } from "react-bootstrap";
+import "./BudgetStatus.css";
+
+const values = [
+  "$3'000.000",
+  "$1'200.000",
+  "$1'500.000",
+  "$2'200.000",
+  "$500.000",
+  "$1'200.000",
+];
 
 function BudgetStatus() {
   return (
-    <Accordion defaultActiveKey="0">
+    <Accordion>
       <Accordion.Item eventKey="0">
-        <Accordion.Header>Accordion Item #1</Accordion.Header>
+        <Accordion.Header id="status-header">
+          <text id="status-header-text">Off-balance: {values[0]}</text>
+        </Accordion.Header>
         <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          <Table striped hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Budget</td>
+                <td>{values[1]}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Planned</td>
+                <td>{values[2]}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Left</td>
+                <td>{values[3]}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Current Balance</td>
+                <td>{values[4]}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Paid from Planned</td>
+                <td>{values[5]}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </Table>
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
