@@ -8,3 +8,14 @@
     justify-content: center;
     text-align: center;
 }
+
+#status-input {
+    background-color: #C8BFC7;
+    border: none;
+    border-radius: 5px;
+    height: 100%;
+}
+
+.button {
+    cursor: pointer;
+}

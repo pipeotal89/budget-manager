@@ -4,6 +4,7 @@
     height: 90%;
     background-color: #06070E;
     border-color: #C8BFC7;
+    overflow-y: auto;
 }
 
 #card-title {

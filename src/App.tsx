@@ -1,5 +1,7 @@
 import BudgetCard from "./components/BudgetCard/BudgetCard";
 import BudgetStatus from "./components/BudgetStatus/BudgetStatus";
+import BudgetCategoriesList from "./components/BudgetCategoriesList/BudgetCategoriesList";
+
 import "./App.css";
 
 /*
@@ -37,7 +39,9 @@ function App() {
         <BudgetCard title="Status">
           <BudgetStatus />
         </BudgetCard>
-        <BudgetCard title="Categories"></BudgetCard>
+        <BudgetCard title="Categories">
+          <BudgetCategoriesList />
+        </BudgetCard>
       </div>
       <div className="row">
         <BudgetCard title="Inversion/Saved"></BudgetCard>
