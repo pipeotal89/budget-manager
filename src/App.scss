@@ -1,3 +1,12 @@
+$custom:#C8BFC7;
+$custom-dark: #048A81;
+$custom-green: #06D6A0;
+$theme-colors: (
+    "custom": $custom,
+    "custom-dark": $custom-dark,
+    "custom-green": $custom-green
+);
+
 $accordion-button-bg: #048A81;
 $accordion-button-active-bg: #06D6A0;
 $accordion-bg: #048A81;
@@ -10,5 +19,6 @@ $list-group-bg: #06D6A0;
 $list-group-border-color: #06070E;
 $list-group-border-width: 5px;
 $list-group-border-radius: 12px;
+
 
 @import '../node_modules/bootstrap/scss/bootstrap.scss';

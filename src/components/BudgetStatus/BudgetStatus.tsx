@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import MoneyFormat from "../MoneyFormat/MoneyFormat";
 
-import { BsFillPencilFill, BsHandThumbsUpFill } from "react-icons/bs";
+import { BsFillPencilFill, BsFloppyFill } from "react-icons/bs";
 
 import "./BudgetStatus.css";
 
@@ -63,7 +63,7 @@ function BudgetStatus() {
                 </td>
                 <td>
                   {editBudget ? (
-                    <BsHandThumbsUpFill
+                    <BsFloppyFill
                       className="button"
                       onClick={() => setEditBudget(false)}
                     />
@@ -106,7 +106,7 @@ function BudgetStatus() {
                 </td>
                 <td>
                   {editBalance ? (
-                    <BsHandThumbsUpFill
+                    <BsFloppyFill
                       className="button"
                       onClick={() => setEditBalance(false)}
                     />
