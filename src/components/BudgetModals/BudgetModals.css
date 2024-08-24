@@ -1,0 +1,19 @@
+#budget-categories-edit-modal-title {
+    text-align: center;
+    width: 100%;
+    color: #F7F0F5;
+}
+
+.modal-input {
+    background-color: #C8BFC7;
+    border: none;
+    border-radius: 5px;
+    height: 30px;
+    margin-left: 20px;
+    width: 70%;
+    padding-left: 10px;
+}
+
+.modal-label {
+    font-weight: bold;
+}

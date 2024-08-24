@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Card from "react-bootstrap/Card";
+
 import "./BudgetCard.css";
 
 interface CardProps {

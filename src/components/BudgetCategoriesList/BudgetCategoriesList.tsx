@@ -3,16 +3,17 @@ import { useState } from "react";
 
 import { BsFillPencilFill, BsFillTrash3Fill } from "react-icons/bs";
 
-import BudgetCategoriesEditModal from "../Modals/BudgetCategoriesEditModal";
+import { BudgetCategoriesAddModal } from "../BudgetModals/BudgetModals";
 
 import "./BudgetCategoriesList.css";
 
 interface BudgetCategoriesListElementProps {
   title: string;
+  onDelete: () => void;
 }
 
 function BudgetCategoriesList() {
-  const [list, setList] = useState(["Miscellaneous", "Online Shopping"]);
+  const [list, setList] = useState<string[]>([]);
   const [categoriesEditModalShow, setCategoriesEditModalShow] = useState(false);
 
   return (
@@ -25,7 +26,12 @@ function BudgetCategoriesList() {
                 className="d-flex align-items-start"
                 style={{ padding: "10px" }}
               >
-                <BudgetCategoriesListElement title={element} />
+                <BudgetCategoriesListElement
+                  onDelete={() =>
+                    setList((list) => list.filter((item) => item !== element))
+                  }
+                  title={element}
+                />
               </ListGroup.Item>
             ))}
           </ListGroup>
@@ -37,17 +43,19 @@ function BudgetCategoriesList() {
         <Button
           id="categories-button-btn"
           variant="custom"
-          //onClick={() => setList((list) => [...list, "Test"])}
           onClick={() => setCategoriesEditModalShow(true)}
         >
           Add
         </Button>
       </div>
-      <BudgetCategoriesEditModal
-        show={categoriesEditModalShow}
-        onHide={() => {
+      <BudgetCategoriesAddModal
+        showCategoriesAddModal={categoriesEditModalShow}
+        onCategoriesAddHide={() => {
           setCategoriesEditModalShow(false);
-          setList((list) => [...list, "Test"]);
+        }}
+        onCategoriesAddSave={(value) => {
+          setCategoriesEditModalShow(false);
+          setList([...list, value]);
         }}
       />
     </>
@@ -59,7 +67,7 @@ export default BudgetCategoriesList;
 export function BudgetCategoriesListElement(
   props: BudgetCategoriesListElementProps
 ) {
-  const { title } = props;
+  const { title, onDelete } = props;
 
   return (
     <div id="categories-list-element">
@@ -76,7 +84,7 @@ export function BudgetCategoriesListElement(
           <BsFillPencilFill size="20px" />
         </Button>
         <Button variant="custom-green" id="categories-list-element-button">
-          <BsFillTrash3Fill size="20px" />
+          <BsFillTrash3Fill size="20px" onClick={onDelete} />
         </Button>
       </div>
     </div>
