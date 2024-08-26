@@ -17,6 +17,13 @@ interface BudgetCategoriesAddModalProps {
   onCategoriesAddSave: (value: string) => void;
 }
 
+interface BudgetCategoriesEditModalProps {
+  categoriesEditTitle: string;
+  showCategoriesEditModal: boolean;
+  onCategoriesEditHide: () => void;
+  onCategoriesEditSave: (value: string) => void;
+}
+
 function BudgetModal(props: BudgetModalProps) {
   const { showModal, onSave, onHide, title, children } = props;
 
@@ -69,6 +76,41 @@ export function BudgetCategoriesAddModal(props: BudgetCategoriesAddModalProps) {
         placeholder="Insert..."
         name="categoryName"
         onChange={onInputChange}
+      />
+    </BudgetModal>
+  );
+}
+
+export function BudgetCategoriesEditModal(
+  props: BudgetCategoriesEditModalProps
+) {
+  const {
+    categoriesEditTitle,
+    showCategoriesEditModal,
+    onCategoriesEditSave,
+    onCategoriesEditHide,
+  } = props;
+
+  const [categoryName, setCategoryName] = useState("");
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
+  };
+
+  return (
+    <BudgetModal
+      title="Edit Category"
+      showModal={showCategoriesEditModal}
+      onHide={onCategoriesEditHide}
+      onSave={() => onCategoriesEditSave(categoryName)}
+    >
+      <text className="modal-label">Name:</text>
+      <input
+        className="modal-input"
+        placeholder="Insert..."
+        name="categoryName"
+        onChange={onInputChange}
+        defaultValue={categoriesEditTitle}
       />
     </BudgetModal>
   );

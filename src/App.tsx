@@ -1,6 +1,6 @@
-import BudgetCard from "./components/BudgetCard/BudgetCard";
-import BudgetStatus from "./components/BudgetStatus/BudgetStatus";
-import BudgetCategoriesList from "./components/BudgetCategoriesList/BudgetCategoriesList";
+import HomePage from "./pages/Home/HomePage";
+import CategoriesPage from "./pages/Categories/CategoriesPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 
@@ -13,41 +13,13 @@ import "./App.css";
 */
 
 function App() {
-  /*
-  const [list, setList] = useState(["Goku", "Naruto", "Eren"]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const handleClick = () => setIsLoading(!isLoading);
-
-  const handleSelect = (element: string) => {
-    console.log("Imprimiendo " + element);
-  };
-
-  const content = list.length ? (
-    <List data={list} onSelect={handleSelect} />
-  ) : (
-    "Sin elementos para mostrar"
-  );
-  */
-
   return (
-    <div className="main">
-      <div className="title">
-        <text className="title-text">Budget Manager 2.0</text>
-      </div>
-      <div className="row">
-        <BudgetCard title="Status">
-          <BudgetStatus />
-        </BudgetCard>
-        <BudgetCard title="Categories">
-          <BudgetCategoriesList />
-        </BudgetCard>
-      </div>
-      <div className="row">
-        <BudgetCard title="Inversion/Saved"></BudgetCard>
-        <BudgetCard title="Planned"></BudgetCard>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/categories" element={<CategoriesPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
