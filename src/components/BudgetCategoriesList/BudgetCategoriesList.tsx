@@ -32,7 +32,7 @@ function BudgetCategoriesList() {
 
   const [list, setList] = useState<categoryList[]>([]);
 
-  const url = "budget-manager-server-tau.vercel.app";
+  const url = "https://budget-manager-server-tau.vercel.app";
 
   function retrieveList() {
     fetch(`${url}/api/v1/categories`, {
