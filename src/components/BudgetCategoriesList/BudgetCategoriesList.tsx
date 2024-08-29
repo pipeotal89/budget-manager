@@ -1,5 +1,5 @@
 import { ListGroup, Button, Badge } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BsFillPencilFill, BsFillTrash3Fill, BsBookHalf } from "react-icons/bs";
 
@@ -33,6 +33,10 @@ function BudgetCategoriesList() {
   const [list, setList] = useState<categoryList[]>([]);
 
   const url = "https://budget-manager-server-tau.vercel.app";
+
+  useEffect(() => {
+    retrieveList();
+  }, []);
 
   function retrieveList() {
     fetch(`${url}/api/v1/categories`, {
