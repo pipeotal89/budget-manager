@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="/categories/:category" element={<CategoriesPage />} />
       </Routes>
     </BrowserRouter>
   );

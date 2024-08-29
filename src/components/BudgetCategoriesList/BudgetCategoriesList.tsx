@@ -3,36 +3,111 @@ import { useState } from "react";
 
 import { BsFillPencilFill, BsFillTrash3Fill, BsBookHalf } from "react-icons/bs";
 
-import {
-  BudgetCategoriesAddModal,
-  BudgetCategoriesEditModal,
-} from "../BudgetModals/BudgetModals";
+import BudgetCategoriesAddModal from "../BudgetModals/BudgetCategoriesAddModal";
+import BudgetCategoriesEditModal from "../BudgetModals/BudgetCategoriesEditModal";
 
 import "./BudgetCategoriesList.css";
 
+//Local: http://192.168.100.8:3050
+//Remote: budget-manager-server-tau.vercel.app
+
 interface BudgetCategoriesListElementProps {
   title: string;
-  onEditModalShow: (title: string) => void;
-  onDelete: () => void;
+  _id: string;
+  onEditModalShow: (title: string, _id: string) => void;
+  onDelete: (_id: string) => void;
+}
+
+interface categoryList {
+  _id: string;
+  name: string;
+  month: string;
 }
 
 function BudgetCategoriesList() {
-  const [list, setList] = useState<string[]>([]);
   const [categoriesEditModalShow, setCategoriesEditModalShow] = useState(false);
   const [categoriesAddModalShow, setCategoriesAddModalShow] = useState(false);
   const [categoriesEditModalTitle, setCategoriesEditModalTitle] = useState("");
+  const [categoriesEditModalId, setCategoriesEditModalId] = useState("");
 
-  const handleCategoriesAddSave = (value: string) => {
+  const [list, setList] = useState<categoryList[]>([]);
+
+  const url = "budget-manager-server-tau.vercel.app";
+
+  function retrieveList() {
+    fetch(`${url}/api/v1/categories`, {
+      method: "GET",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setList((list) => {
+          console.log(list);
+          return data.categories;
+        });
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleCategoriesAddSave(categoryName: string) {
+    const data = {
+      name: categoryName,
+      month: "Next",
+    };
+    fetch(`${url}/api/v1/categories/add`, {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveList())
+      .catch((err) => console.log(err));
     setCategoriesAddModalShow(false);
-    setList([...list, value]);
+  }
+
+  const handleCategoriesEditSave = (categoryName: string) => {
+    const data = {
+      name: categoryName,
+      month: "Next",
+      _id: categoriesEditModalId,
+    };
+    fetch(`${url}/api/v1/categories/edit`, {
+      method: "PATCH",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveList())
+      .catch((err) => console.log(err));
+    setCategoriesEditModalShow(false);
   };
 
-  const handleCategoriesEditSave = (value: string) => {
-    setCategoriesEditModalShow(false);
-    const new_arr = [...list];
-    new_arr[list.indexOf(categoriesEditModalTitle)] = value;
-    setList(new_arr);
-  };
+  function handleCategoryDelete(_id: string) {
+    const data = {
+      _id: _id,
+    };
+    fetch(`${url}/api/v1/categories/delete`, {
+      method: "delete",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveList())
+      .catch((err) => console.log(err));
+  }
 
   return (
     <>
@@ -45,12 +120,12 @@ function BudgetCategoriesList() {
                 style={{ padding: "10px" }}
               >
                 <BudgetCategoriesListElement
-                  onDelete={() =>
-                    setList((list) => list.filter((item) => item !== element))
-                  }
-                  title={element}
-                  onEditModalShow={(title) => {
+                  onDelete={(_id) => handleCategoryDelete(_id)}
+                  title={element.name}
+                  _id={element._id}
+                  onEditModalShow={(title, _id) => {
                     setCategoriesEditModalTitle(title);
+                    setCategoriesEditModalId(_id);
                     setCategoriesEditModalShow(true);
                   }}
                 />
@@ -94,7 +169,7 @@ export default BudgetCategoriesList;
 export function BudgetCategoriesListElement(
   props: BudgetCategoriesListElementProps
 ) {
-  const { title, onDelete, onEditModalShow } = props;
+  const { title, _id, onDelete, onEditModalShow } = props;
 
   return (
     <div id="categories-list-element">
@@ -110,18 +185,18 @@ export function BudgetCategoriesListElement(
         <Button
           variant="custom-green"
           id="categories-list-element-button"
-          href="/categories"
+          href={`/categories/${title.toLowerCase().replace(" ", "-")}`}
         >
           <BsBookHalf size="20px" />
         </Button>
         <Button variant="custom-green" id="categories-list-element-button">
           <BsFillPencilFill
             size="20px"
-            onClick={() => onEditModalShow(title)}
+            onClick={() => onEditModalShow(title, _id)}
           />
         </Button>
         <Button variant="custom-green" id="categories-list-element-button">
-          <BsFillTrash3Fill size="20px" onClick={onDelete} />
+          <BsFillTrash3Fill size="20px" onClick={() => onDelete(_id)} />
         </Button>
       </div>
     </div>

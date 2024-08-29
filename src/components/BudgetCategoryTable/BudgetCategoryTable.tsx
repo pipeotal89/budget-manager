@@ -8,15 +8,6 @@ import MoneyFormat from "../MoneyFormat/MoneyFormat";
 
 import "./BudgetCategoryTable.css";
 
-interface BudgetCategoryTableElementProps {
-  productName: string;
-  vendor: string;
-  value: number;
-  paid: number;
-  paymentDate: string;
-  handleClick: () => void;
-}
-
 function BudgetCategoryTable() {
   const [products, setProducts] = useState([
     {
@@ -28,7 +19,7 @@ function BudgetCategoryTable() {
     },
   ]);
 
-  function handleClick() {
+  function handlePay() {
     setProducts([
       ...products,
       {
@@ -39,6 +30,12 @@ function BudgetCategoryTable() {
         paymentDate: "25/05/2024",
       },
     ]);
+  }
+
+  function handleDelete(productName: string) {
+    setProducts((products) =>
+      products.filter((product) => product.productName !== productName)
+    );
   }
 
   return (
@@ -63,7 +60,8 @@ function BudgetCategoryTable() {
                 value={product.value}
                 paid={product.paid}
                 paymentDate={product.paymentDate}
-                handleClick={handleClick}
+                handlePay={handlePay}
+                handleDelete={handleDelete}
               />
             ))
           ) : (
@@ -79,10 +77,28 @@ function BudgetCategoryTable() {
 
 export default BudgetCategoryTable;
 
+interface BudgetCategoryTableElementProps {
+  productName: string;
+  vendor: string;
+  value: number;
+  paid: number;
+  paymentDate: string;
+  handlePay: () => void;
+  handleDelete: (productName: string) => void;
+}
+
 export function BudgetCategoryTableElement(
   props: BudgetCategoryTableElementProps
 ) {
-  const { productName, vendor, value, paid, paymentDate, handleClick } = props;
+  const {
+    productName,
+    vendor,
+    value,
+    paid,
+    paymentDate,
+    handlePay,
+    handleDelete,
+  } = props;
 
   return (
     <tr>
@@ -99,9 +115,13 @@ export function BudgetCategoryTableElement(
         <FaMoneyBillWave
           size="25px"
           style={{ margin: "0 10px 0 10px" }}
-          onClick={handleClick}
+          onClick={handlePay}
         />
-        <BsFillTrash3Fill size="25px" style={{ margin: "0 10px 0 10px" }} />
+        <BsFillTrash3Fill
+          size="25px"
+          style={{ margin: "0 10px 0 10px" }}
+          onClick={() => handleDelete(productName)}
+        />
       </td>
     </tr>
   );
