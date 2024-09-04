@@ -1,6 +1,6 @@
 import { Accordion, Table } from "react-bootstrap";
 import CurrencyInput from "react-currency-input-field";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import MoneyFormat from "../MoneyFormat/MoneyFormat";
 
@@ -8,18 +8,52 @@ import { BsFillPencilFill, BsFloppyFill } from "react-icons/bs";
 
 import "./BudgetStatus.css";
 
-function BudgetStatus() {
+interface BudgetStatusProps {
+  month: string;
+}
+
+function BudgetStatus(props: BudgetStatusProps) {
+  const { month } = props;
+
   const [editBalance, setEditBalance] = useState(false);
   const [editBudget, setEditBudget] = useState(false);
 
   const [values, setValues] = useState({
-    offBalance: 3000000,
-    budget: 1200000,
-    planned: 1500000,
-    left: 2200000,
-    currentBalance: 500000,
-    paid: 1200000,
+    budget: 0,
+    planned: 0,
+    currentBalance: 0,
+    paid: 0,
   });
+
+  const left = values.budget - values.planned;
+  const offBalance = values.budget - values.paid - values.currentBalance;
+
+  const url =
+    "https://budget-manager-git-master-pipeotal89s-projects.vercel.app";
+
+  useEffect(() => {
+    retrieveValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function retrieveValues() {
+    fetch(`${url}/api/v1/balance/total?month=${month}`, {
+      method: "GET",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setValues({
+          ...values,
+          planned: data.balance[0].total,
+          paid: data.balance[0].paid,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
@@ -33,7 +67,7 @@ function BudgetStatus() {
       <Accordion.Item eventKey="0">
         <Accordion.Header id="status-header">
           <text id="status-header-text">
-            Off-balance: <MoneyFormat value={values.offBalance} />
+            Off-balance: <MoneyFormat value={offBalance} />
           </text>
         </Accordion.Header>
         <Accordion.Body>
@@ -85,7 +119,7 @@ function BudgetStatus() {
               <tr>
                 <td>Left</td>
                 <td>
-                  <MoneyFormat value={values.left} />
+                  <MoneyFormat value={left} />
                 </td>
                 <td></td>
               </tr>

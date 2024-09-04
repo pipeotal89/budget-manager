@@ -4,6 +4,12 @@
     color: #F7F0F5;
 }
 
+.modal-field {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
 .modal-input {
     background-color: #C8BFC7;
     border: none;
@@ -12,6 +18,13 @@
     margin-left: 20px;
     width: 70%;
     padding-left: 10px;
+}
+
+#category-button {
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-label {

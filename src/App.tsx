@@ -16,8 +16,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/categories/:category" element={<CategoriesPage />} />
+        <Route path="/:month" element={<HomePage />} />
+        <Route
+          path="/:month/categories/:category"
+          element={<CategoriesPage />}
+        />
       </Routes>
     </BrowserRouter>
   );

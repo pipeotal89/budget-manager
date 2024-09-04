@@ -1,6 +1,9 @@
 import BudgetCard from "../../components/BudgetCard/BudgetCard";
 import BudgetStatus from "../../components/BudgetStatus/BudgetStatus";
 import BudgetCategoriesList from "../../components/BudgetCategoriesList/BudgetCategoriesList";
+import NavBar from "../../components/NavBar/NavBar";
+
+import { useParams } from "react-router-dom";
 
 import "./HomePage.css";
 
@@ -13,17 +16,19 @@ import "./HomePage.css";
 */
 
 function HomePage() {
+  const { month } = useParams();
+
   return (
     <div className="main">
       <div className="title">
-        <text className="title-text">Budget Manager 2.0</text>
+        <NavBar month={month!} />
       </div>
       <div className="row">
         <BudgetCard title="Status">
-          <BudgetStatus />
+          <BudgetStatus month={month!} />
         </BudgetCard>
         <BudgetCard title="Categories">
-          <BudgetCategoriesList />
+          <BudgetCategoriesList month={month!} />
         </BudgetCard>
       </div>
       <div className="row">

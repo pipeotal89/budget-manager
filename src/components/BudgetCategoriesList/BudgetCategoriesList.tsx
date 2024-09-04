@@ -1,45 +1,56 @@
 import { ListGroup, Button, Badge } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { BsFillPencilFill, BsFillTrash3Fill, BsBookHalf } from "react-icons/bs";
 
 import BudgetCategoriesAddModal from "../BudgetModals/BudgetCategoriesAddModal";
 import BudgetCategoriesEditModal from "../BudgetModals/BudgetCategoriesEditModal";
+import MoneyFormat from "../MoneyFormat/MoneyFormat";
 
 import "./BudgetCategoriesList.css";
 
 //Local: http://192.168.100.8:3050
 //Remote: budget-manager-server-tau.vercel.app
 
-interface BudgetCategoriesListElementProps {
-  title: string;
-  _id: string;
-  onEditModalShow: (title: string, _id: string) => void;
-  onDelete: (_id: string) => void;
-}
-
 interface categoryList {
   _id: string;
   name: string;
   month: string;
+  products: Array<{
+    _id?: string | undefined;
+    total?: number | undefined;
+    paid?: number | undefined;
+    count?: number | undefined;
+  }>;
 }
 
-function BudgetCategoriesList() {
+interface BudgetCategoriesProps {
+  month: string;
+}
+
+function BudgetCategoriesList(props: BudgetCategoriesProps) {
+  const { month } = props;
+
   const [categoriesEditModalShow, setCategoriesEditModalShow] = useState(false);
   const [categoriesAddModalShow, setCategoriesAddModalShow] = useState(false);
   const [categoriesEditModalTitle, setCategoriesEditModalTitle] = useState("");
   const [categoriesEditModalId, setCategoriesEditModalId] = useState("");
+  //const [total, setTotal] = useState(0);
+  //const [paid, setPaid] = useState(0);
 
   const [list, setList] = useState<categoryList[]>([]);
 
-  const url = "https://budget-manager-server-tau.vercel.app";
+  const url =
+    "https://budget-manager-git-master-pipeotal89s-projects.vercel.app";
 
   useEffect(() => {
     retrieveList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function retrieveList() {
-    fetch(`${url}/api/v1/categories`, {
+    fetch(`${url}/api/v1/categories/total?month=${month}`, {
       method: "GET",
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -52,7 +63,6 @@ function BudgetCategoriesList() {
           console.log(list);
           return data.categories;
         });
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }
@@ -60,7 +70,7 @@ function BudgetCategoriesList() {
   function handleCategoriesAddSave(categoryName: string) {
     const data = {
       name: categoryName,
-      month: "Next",
+      month: month,
     };
     fetch(`${url}/api/v1/categories/add`, {
       method: "POST",
@@ -79,7 +89,6 @@ function BudgetCategoriesList() {
   const handleCategoriesEditSave = (categoryName: string) => {
     const data = {
       name: categoryName,
-      month: "Next",
       _id: categoriesEditModalId,
     };
     fetch(`${url}/api/v1/categories/edit`, {
@@ -125,9 +134,9 @@ function BudgetCategoriesList() {
               >
                 <BudgetCategoriesListElement
                   onDelete={(_id) => handleCategoryDelete(_id)}
-                  title={element.name}
-                  _id={element._id}
+                  data={element}
                   onEditModalShow={(title, _id) => {
+                    console.log(list);
                     setCategoriesEditModalTitle(title);
                     setCategoriesEditModalId(_id);
                     setCategoriesEditModalShow(true);
@@ -170,37 +179,52 @@ function BudgetCategoriesList() {
 
 export default BudgetCategoriesList;
 
+interface BudgetCategoriesListElementProps {
+  data: categoryList;
+  onEditModalShow: (title: string, _id: string) => void;
+  onDelete: (_id: string) => void;
+}
+
 export function BudgetCategoriesListElement(
   props: BudgetCategoriesListElementProps
 ) {
-  const { title, _id, onDelete, onEditModalShow } = props;
+  const { onDelete, onEditModalShow, data } = props;
 
   return (
     <div id="categories-list-element">
       <div className="categories-list-element-row" id="primary">
-        <text id="categories-list-element-title">{title}</text>
-        <text id="categories-list-element-text">Planned: $3.000.000</text>
-        <text id="categories-list-element-text">Paid: $5.000.000</text>
+        <text id="categories-list-element-title">
+          {data.name.charAt(0).toUpperCase() +
+            data.name.substring(1).replace("-", " ")}
+        </text>
+        <text id="categories-list-element-text">
+          Planned: <MoneyFormat value={data?.products[0]?.total ?? 0} />
+        </text>
+        <text id="categories-list-element-text">
+          Paid: <MoneyFormat value={data?.products[0]?.paid ?? 0} />
+        </text>
         <Badge bg="custom-dark" id="categories-list-element-badge">
-          10
+          {data?.products[0]?.count ?? 0}
         </Badge>
       </div>
       <div className="categories-list-element-row" id="secondary">
         <Button
           variant="custom-green"
           id="categories-list-element-button"
-          href={`/categories/${title.toLowerCase().replace(" ", "-")}`}
+          href={`${useLocation().pathname}/categories/${data.name
+            .toLowerCase()
+            .replace(" ", "-")}`}
         >
           <BsBookHalf size="20px" />
         </Button>
         <Button variant="custom-green" id="categories-list-element-button">
           <BsFillPencilFill
             size="20px"
-            onClick={() => onEditModalShow(title, _id)}
+            onClick={() => onEditModalShow(data.name, data._id)}
           />
         </Button>
         <Button variant="custom-green" id="categories-list-element-button">
-          <BsFillTrash3Fill size="20px" onClick={() => onDelete(_id)} />
+          <BsFillTrash3Fill size="20px" onClick={() => onDelete(data._id)} />
         </Button>
       </div>
     </div>
