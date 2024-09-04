@@ -41,7 +41,7 @@ function BudgetCategoriesList(props: BudgetCategoriesProps) {
 
   const [list, setList] = useState<categoryList[]>([]);
 
-  const url = "budget-manager-server-tau.vercel.app";
+  const url = "http://budget-manager-server-tau.vercel.app";
 
   useEffect(() => {
     retrieveList();
