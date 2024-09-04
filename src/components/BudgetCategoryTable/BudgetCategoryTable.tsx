@@ -30,7 +30,7 @@ interface BudgetCategoryTableProps {
 function BudgetCategoryTable(props: BudgetCategoryTableProps) {
   const { month, category } = props;
 
-  const url = "http://budget-manager-server-tau.vercel.app";
+  const url = "https://budget-manager-server-tau.vercel.app";
 
   const [productsAddModalShow, setProductsAddModalShow] = useState(false);
 

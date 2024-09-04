@@ -28,7 +28,7 @@ function BudgetStatus(props: BudgetStatusProps) {
   const left = values.budget - values.planned;
   const offBalance = values.budget - values.paid - values.currentBalance;
 
-  const url = "http://budget-manager-server-tau.vercel.app";
+  const url = "https://budget-manager-server-tau.vercel.app";
 
   useEffect(() => {
     retrieveValues();
