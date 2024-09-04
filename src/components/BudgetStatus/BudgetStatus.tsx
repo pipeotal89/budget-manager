@@ -28,8 +28,7 @@ function BudgetStatus(props: BudgetStatusProps) {
   const left = values.budget - values.planned;
   const offBalance = values.budget - values.paid - values.currentBalance;
 
-  const url =
-    "https://budget-manager-git-master-pipeotal89s-projects.vercel.app";
+  const url = "budget-manager-server-tau.vercel.app";
 
   useEffect(() => {
     retrieveValues();

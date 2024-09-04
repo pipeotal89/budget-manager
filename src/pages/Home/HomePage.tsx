@@ -20,7 +20,7 @@ function HomePage() {
 
   return (
     <div className="main">
-      <div className="title">
+      <div id="title">
         <NavBar month={month!} />
       </div>
       <div className="row">
