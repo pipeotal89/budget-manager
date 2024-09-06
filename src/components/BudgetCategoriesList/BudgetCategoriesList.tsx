@@ -68,7 +68,7 @@ function BudgetCategoriesList(props: BudgetCategoriesProps) {
 
   function handleCategoriesAddSave(categoryName: string) {
     const data = {
-      name: categoryName,
+      name: categoryName.toLowerCase().replace(" ", "-"),
       month: month,
     };
     fetch(`${url}/api/v1/categories/add`, {
