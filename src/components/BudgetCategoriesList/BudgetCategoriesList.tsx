@@ -11,7 +11,7 @@ import MoneyFormat from "../MoneyFormat/MoneyFormat";
 import "./BudgetCategoriesList.css";
 
 //Local: http://192.168.100.8:3050
-//Remote: budget-manager-server-tau.vercel.app
+//Remote: https://budget-manager-server-tau.vercel.app
 
 interface categoryList {
   _id: string;

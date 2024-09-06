@@ -19,19 +19,32 @@ function BudgetStatus(props: BudgetStatusProps) {
   const [editBudget, setEditBudget] = useState(false);
 
   const [values, setValues] = useState({
-    budget: 0,
     planned: 0,
-    currentBalance: 0,
     paid: 0,
   });
 
-  const left = values.budget - values.planned;
-  const offBalance = values.budget - values.paid - values.currentBalance;
+  const [status, setStatus] = useState({
+    budget: 0,
+    current: 0,
+  });
+
+  const [editedStatus, setEditedStatus] = useState({
+    budget: 0,
+    current: 0,
+  });
+
+  const left = status.budget - values.planned;
+  const offBalance = status.budget - values.paid - status.current;
 
   const url = "https://budget-manager-server-tau.vercel.app";
 
   useEffect(() => {
     retrieveValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    retrieveStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,9 +67,66 @@ function BudgetStatus(props: BudgetStatusProps) {
       .catch((err) => console.log(err));
   }
 
+  function retrieveStatus() {
+    fetch(`${url}/api/v1/balance/status?month=${month}`, {
+      method: "GET",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setStatus({
+          ...status,
+          budget: data.status[0].budget,
+          current: data.status[0].current,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleEditBudget() {
+    const data = {
+      month: month,
+      budget: editedStatus.budget,
+    };
+    fetch(`${url}/api/v1/balance/status/edit`, {
+      method: "PATCH",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveStatus())
+      .catch((err) => console.log(err));
+    setEditBudget(false);
+  }
+
+  function handleEditCurrent() {
+    const data = {
+      month: month,
+      current: editedStatus.current,
+    };
+    fetch(`${url}/api/v1/balance/status/edit`, {
+      method: "PATCH",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveStatus())
+      .catch((err) => console.log(err));
+    setEditBudget(false);
+  }
+
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({
-      ...values,
+    setEditedStatus({
+      ...editedStatus,
       [e.target.name]: parseInt(e.target.value.replace(/[$,]/g, "")),
     });
   };
@@ -88,17 +158,20 @@ function BudgetStatus(props: BudgetStatusProps) {
                       prefix="$"
                       name="budget"
                       onChange={onInputChange}
-                      defaultValue={values.budget}
+                      defaultValue={status.budget}
                     />
                   ) : (
-                    <MoneyFormat value={values.budget} />
+                    <MoneyFormat value={status.budget} />
                   )}
                 </td>
                 <td>
                   {editBudget ? (
                     <BsFloppyFill
                       className="button"
-                      onClick={() => setEditBudget(false)}
+                      onClick={() => {
+                        handleEditBudget();
+                        setEditBudget(false);
+                      }}
                     />
                   ) : (
                     <BsFillPencilFill
@@ -129,19 +202,22 @@ function BudgetStatus(props: BudgetStatusProps) {
                     <CurrencyInput
                       id="status-input"
                       prefix="$"
-                      name="currentBalance"
+                      name="current"
                       onChange={onInputChange}
-                      defaultValue={values.currentBalance}
+                      defaultValue={status.current}
                     />
                   ) : (
-                    <MoneyFormat value={values.currentBalance} />
+                    <MoneyFormat value={status.current} />
                   )}
                 </td>
                 <td>
                   {editBalance ? (
                     <BsFloppyFill
                       className="button"
-                      onClick={() => setEditBalance(false)}
+                      onClick={() => {
+                        handleEditCurrent();
+                        setEditBalance(false);
+                      }}
                     />
                   ) : (
                     <BsFillPencilFill

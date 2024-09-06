@@ -8,6 +8,7 @@ import MoneyFormat from "../MoneyFormat/MoneyFormat";
 import BudgetProductsAddModal, {
   productsInterface,
 } from "../BudgetModals/BudgetProductsAddModal";
+import BudgetProductsPayModal from "../BudgetModals/BudgetProductsPayModal";
 
 import "./BudgetCategoryTable.css";
 
@@ -33,6 +34,10 @@ function BudgetCategoryTable(props: BudgetCategoryTableProps) {
   const url = "https://budget-manager-server-tau.vercel.app";
 
   const [productsAddModalShow, setProductsAddModalShow] = useState(false);
+  const [productsPayModalShow, setProductsPayModalShow] = useState(false);
+
+  const [productPayId, setProductPayId] = useState("");
+  const [productPayValue, setProductPayValue] = useState(0);
 
   const [products, setProducts] = useState<productsList[]>([]);
 
@@ -59,14 +64,7 @@ function BudgetCategoryTable(props: BudgetCategoryTableProps) {
       .catch((err) => console.log(err));
   }
 
-  function handleDelete(productName: string) {
-    setProducts((products) =>
-      products.filter((product) => product.name !== productName)
-    );
-  }
-
   function handleProductsSave(product: productsInterface) {
-    console.log(product);
     const data = {
       name: product.name,
       value: parseInt(product.value!.replace(/[$,]/g, "")),
@@ -87,6 +85,43 @@ function BudgetCategoryTable(props: BudgetCategoryTableProps) {
       .then(() => retrieveProducts())
       .catch((err) => console.log(err));
     setProductsAddModalShow(false);
+  }
+
+  function handleProductDelete(_id: string) {
+    const data = {
+      _id: _id,
+    };
+    fetch(`${url}/api/v1/products/delete`, {
+      method: "DELETE",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveProducts())
+      .catch((err) => console.log(err));
+  }
+
+  function handleProductPay(_id: string, value: number, paid: string) {
+    const data = {
+      _id: _id,
+      value: value,
+      paid: parseInt(paid!.replace(/[$,]/g, "")),
+    };
+    fetch(`${url}/api/v1/products/pay`, {
+      method: "PATCH",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then(() => retrieveProducts())
+      .catch((err) => console.log(err));
+    setProductsPayModalShow(false);
   }
 
   return (
@@ -119,8 +154,12 @@ function BudgetCategoryTable(props: BudgetCategoryTableProps) {
               products.map((product) => (
                 <BudgetCategoryTableElement
                   product={product}
-                  handlePay={() => console.log("Test")}
-                  handleDelete={handleDelete}
+                  handlePay={() => {
+                    setProductPayId(product._id);
+                    setProductPayValue(product.value);
+                    setProductsPayModalShow(true);
+                  }}
+                  handleDelete={handleProductDelete}
                 />
               ))
             ) : (
@@ -137,6 +176,17 @@ function BudgetCategoryTable(props: BudgetCategoryTableProps) {
           }}
           onProductsAddSave={(product: productsInterface) =>
             handleProductsSave(product)
+          }
+        />
+        <BudgetProductsPayModal
+          _id={productPayId}
+          value={productPayValue}
+          showProductsPayModal={productsPayModalShow}
+          onProductsPayHide={() => {
+            setProductsPayModalShow(false);
+          }}
+          onProductsPaySave={(_id, value, paid) =>
+            handleProductPay(_id, value, paid)
           }
         />
       </div>
@@ -167,17 +217,17 @@ export function BudgetCategoryTableElement(
       <td>
         <MoneyFormat value={product.paid} />
       </td>
-      <td>{product.payment_date}</td>
+      <td>{product.payment_date.split("T")[0]}</td>
       <td id="category-table-actions">
         <FaMoneyBillWave
           size="25px"
-          style={{ margin: "0 10px 0 10px" }}
+          style={{ margin: "0 10px 0 10px", cursor: "pointer" }}
           onClick={handlePay}
         />
         <BsFillTrash3Fill
           size="25px"
-          style={{ margin: "0 10px 0 10px" }}
-          onClick={() => handleDelete(product.name)}
+          style={{ margin: "0 10px 0 10px", cursor: "pointer" }}
+          onClick={() => handleDelete(product._id)}
         />
       </td>
     </tr>
