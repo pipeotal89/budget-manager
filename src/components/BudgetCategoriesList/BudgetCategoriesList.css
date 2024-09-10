@@ -1,6 +1,6 @@
 #categories-list {
     height: 80%;
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-width: thin;
 }
 

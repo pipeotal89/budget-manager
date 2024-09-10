@@ -2,6 +2,7 @@ import BudgetCard from "../../components/BudgetCard/BudgetCard";
 import BudgetStatus from "../../components/BudgetStatus/BudgetStatus";
 import BudgetCategoriesList from "../../components/BudgetCategoriesList/BudgetCategoriesList";
 import NavBar from "../../components/NavBar/NavBar";
+import InvestmentTabs from "../../components/InvestmentTabs/InvestmentTabs";
 
 import { useParams } from "react-router-dom";
 
@@ -24,16 +25,25 @@ function HomePage() {
         <NavBar month={month!} />
       </div>
       <div className="row">
-        <BudgetCard title="Status">
-          <BudgetStatus month={month!} />
-        </BudgetCard>
-        <BudgetCard title="Categories">
-          <BudgetCategoriesList month={month!} />
-        </BudgetCard>
-      </div>
-      <div className="row">
-        <BudgetCard title="Inversion/Saved"></BudgetCard>
-        <BudgetCard title="Planned"></BudgetCard>
+        <div className="column">
+          <div className="budget-card">
+            <BudgetCard title="Status">
+              <BudgetStatus month={month!} />
+            </BudgetCard>
+          </div>
+          <div className="budget-card">
+            <BudgetCard title="Investment/Planned">
+              <InvestmentTabs />
+            </BudgetCard>
+          </div>
+        </div>
+        <div className="column">
+          <div className="budget-card">
+            <BudgetCard title="Categories">
+              <BudgetCategoriesList month={month!} />
+            </BudgetCard>
+          </div>
+        </div>
       </div>
     </div>
   );

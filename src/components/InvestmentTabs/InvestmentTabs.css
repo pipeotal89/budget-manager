@@ -1,0 +1,14 @@
+.investment-value {
+    color: #C8BFC7;
+    font-size: 20px;
+}
+
+#investment-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#investment-button-btn {
+    font-weight: bold;
+}
